@@ -26,27 +26,33 @@ function createGalleryItemMarkup (galleryItems) {
     return markup;
 };
 
-document
-  .querySelectorAll(".gallery__link")
-  .forEach((item) =>
-    item.addEventListener("click", (event) => event.preventDefault())
-);
   
 function openOriginalImage(event) {
   if (event.target.nodeName !== "IMG") return;
+  event.preventDefault();
 
   const fullImageUrl = event.target.dataset.source;
-  const instance = basicLightbox.create(
-    `<img src="${fullImageUrl}" width="800" height="600">`
-  );
+
+
+  const methods = {
+		onShow: instance => {
+			window.addEventListener("keydown", closeOriginalImage);
+		},
+		onClose: instance => {
+			window.removeEventListener("keydown", closeOriginalImage);
+		},
+	};
+  
+  const instance = basicLightbox.create(`<img src="${fullImageUrl}" width="800" height="600">`, methods);
 
   instance.show();
+ 
+ function closeOriginalImage({ code }) {
+		if (code === "Escape") {
+			instance.close();
+		}
+	}
+  };
+  
 
-  window.addEventListener("keydown", function closeFullImage(event) {
-    if (event.key === "Escape") {
-      instance.close();
-      window.removeEventListener("keydown", closeFullImage);
-    }
-  });
-}
-// --------------------------------//
+

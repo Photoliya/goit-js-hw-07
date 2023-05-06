@@ -13,11 +13,6 @@ const list = galleryItems.map((item) => {
 
 galleryList.insertAdjacentHTML("afterbegin", list);
 
-document
-  .querySelectorAll(".gallery__link")
-  .forEach((item) =>
-    item.addEventListener("click", (event) => event.preventDefault())
-  );
 
 const lightbox = new SimpleLightbox(".gallery a", {
   captionsData: "alt",
